@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luminary Reward Corp - Demo</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f8fa;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: #004aad;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  main {
+    flex: 1;
+    max-width: 400px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+    padding: 2rem;
+  }
+  h2 {
+    margin-top: 0;
+    text-align: center;
+    color: #004aad;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+  input[type=email], input[type=text], input[type=date], select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  input[type=file] {
+    margin-bottom: 1rem;
+  }
+  button {
+    background: #004aad;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    width: 100%;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:disabled {
+    background: #7a93c2;
+    cursor: not-allowed;
+  }
+  .hidden {
+    display: none;
+  }
+  .notification {
+    background: #d4edda;
+    color: #155724;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgb(21 87 36 / 0.2);
+  }
+  .waiting {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 2rem;
+  }
+  #rewardAmount {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+    margin: 1rem 0;
+    text-align: center;
+  }
+  #withdrawMessage {
+    margin-top: 1rem;
+    color: #a94442;
+    background: #f2dede;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+  #supportButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #004aad;
+    color: white;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+    line-height: 56px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgb(0 74 173 / 0.5);
+  }
+  #supportPopup {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: white;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.15);
+    border-radius: 8px;
+    padding: 1rem;
+    width: 260px;
+    display: none;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  #supportPopup h4 {
+    margin-top: 0;
+    color: #004aad;
+  }
+  #supportPopup a {
+    color: #004aad;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .center-text {
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>Luminary Reward Corp</header>
+
+<main>
+
+<!-- Step 1: Sign In / Sign Up -->
+<section id="signInSection">
+  <h2>Sign In / Sign Up</h2>
+  <form id="signInForm">
+    <label for="emailInput">Email address</label>
+    <input type="email" id="emailInput" placeholder="you@example.com" required />
+    <button type="submit">Continue</button>
+  </form>
+</section>
+
+<!-- Step 2: User Details -->
+<section id="userDetailsSection" class="hidden">
+  <h2>User Details</h2>
+  <form id="userDetailsForm">
+    <label for="nameInput">Full Name</label>
+    <input type="text" id="nameInput" placeholder="Your full name" required />
+    <label for="dobInput">Date of Birth</label>
+    <input type="date" id="dobInput" required />
+    <label for="genderSelect">Gender</label>
+    <select id="genderSelect" required>
+      <option value="" disabled selected>Select gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+      <option>Prefer not to say</option>
+    </select>
+    <label for="countryInput">Country</label>
+    <input type="text" id="countryInput" placeholder="Your country" required />
+    <label for="photoInput">Upload Photo</label>
+    <input type="file" id="photoInput" accept="image/*" required />
+    <button type="submit">Submit Details</button>
+  </form>
+</section>
+
+<!-- Step 3: Waiting -->
+<section id="waitingSection" class="hidden">
+  <div class="waiting">Please wait while we process your reward... (3-5 minutes)</div>
+</section>
+
+<!-- Step 4: Reward Display -->
+<section id="rewardSection" class="hidden">
+  <h2>Congratulations!</h2>
+  <div id="rewardAmount">$10,000</div>
+  <div class="notification" id="personalNotification"></div>
+  <button id="withdrawButton">Withdraw</button>
+  <div id="withdrawMessage" class="hidden"></div>
+</section>
+
+</main>
+
+<!-- Support Button and Popup -->
+<div id="supportButton" title="Customer Support">&#10067;</div>
+<div id="supportPopup">
+  <h4>Customer Support</h4>
+  <p>Email: <a href="mailto:Danielgreat121@gmail.com">Danielgreat121@gmail.com</a></p>
+  <p>WhatsApp: <a href="https://wa.me/2347070248050" target="_blank">+2347070248050</a></p>
+</div>
+
+<script>
+  const signInSection = document.getElementById('signInSection');
+  const userDetailsSection = document.getElementById('userDetailsSection');
+  const waitingSection = document.getElementById('waitingSection');
+  const rewardSection = document.getElementById('rewardSection');
+  const personalNotification = document.getElementById('personalNotification');
+  const withdrawButton = document.getElementById('withdrawButton');
+  const withdrawMessage = document.getElementById('withdrawMessage');
+  const supportButton = document.getElementById('supportButton');
+  const supportPopup = document.getElementById('supportPopup');
+
+  let userEmail = '';
+  let userName = '';
+
+  // Sign In Form Submit
+  document.getElementById('signInForm').addEventListener('submit', e => {
+    e.preventDefault();
+    userEmail = document.getElementById('emailInput').value.trim();
+    if (userEmail) {
+      signInSection.classList.add('hidden');
+      userDetailsSection.classList.remove('hidden');
+    }
+  });
+
+  // User Details Form Submit
+  document.getElementById('userDetailsForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const nameInput = document.getElementById('nameInput').value.trim();
+    const dobInput = document.getElementById('dobInput').value;
+    const genderSelect = document.getElementById('genderSelect').value;
+    const countryInput = document.getElementById('countryInput').value.trim();
+    const photoInput = document.getElementById('photoInput').files[0];
+
+    if (!nameInput || !dobInput || !genderSelect || !countryInput || !photoInput) {
+      alert('Please fill in all fields and upload a photo.');
+      return;
+    }
+
+    userName = nameInput;
+
+    userDetailsSection.classList.add('hidden');
+    waitingSection.classList.remove('hidden');
+
+    // Wait 3-5 minutes (simulate with shorter time for demo: 10 seconds)
+    // For real demo, change 10000 to 180000-300000 ms
+    setTimeout(() => {
+      waitingSection.classList.add('hidden');
+      rewardSection.classList.remove('hidden');
+      personalNotification.textContent = `Dear ${userName}, your reward has been credited! A confirmation email has been sent to ${userEmail}.`;
+      alert(`Simulated email sent to ${userEmail} with your $10,000 reward!`);
+    }, 10000);
+  });
+
+  // Withdraw Button Click
+  withdrawButton.addEventListener('click', () => {
+    withdrawMessage.classList.remove('hidden');
+    withdrawMessage.textContent = 'To activate your account and withdraw your reward, please contact customer support.';
+  });
+
+  // Support Button Toggle Popup
+  supportButton.addEventListener('click', () => {
+    if (supportPopup.style.display === 'block') {
+      supportPopup.style.display = 'none';
+    } else {
+      supportPopup.style.display = 'block';
+    }
+  });
+
+  // Close support popup if clicking outside
+  document.addEventListener('click', (e) => {
+    if (!supportPopup.contains(e.target) && e.target !== supportButton) {
+      supportPopup.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
